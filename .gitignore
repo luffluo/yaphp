@@ -1,0 +1,3 @@
+/build
+src/Zend/*.h
+src/Zend/*.cc
