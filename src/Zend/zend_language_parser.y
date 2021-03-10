@@ -22,8 +22,7 @@ int main(int argc, char const *argv[])
     const char *file = argv[1];
     FILE *fp = fopen(file, "r");
 
-    if(fp == nullptr)
-    {
+    if (fp == NULL) {
         printf("cannot open %s\n", file);
         return -1;
     }
@@ -35,16 +34,25 @@ int main(int argc, char const *argv[])
 }
 %}
 
-%token T_ECHO T_NUMBER
+%token T_ECHO T_LNUMBER
+
+%left '+' '-'
+%left '*' '/'
+%left '(' ')'
 
 %%
 
 statement: %empty
-|   T_ECHO expr    { printf("%d\n", $2); }
+|   T_ECHO expr   { printf("%d\n", $2); }
 ;
 
 expr: %empty
-|   T_NUMBER                      {$$ = $1;}
+|   expr '+' expr                 {$$ = $1 + $3;}
+|   expr '-' expr                 {$$ = $1 - $3;}
+|   expr '*' expr                 {$$ = $1 * $3;}
+|   expr '/' expr                 {$$ = $1 / $3;}
+|   '(' expr ')'                  {$$ = $2;}
+|   T_LNUMBER                     {$$ = $1;}
 ;
 
 %%
